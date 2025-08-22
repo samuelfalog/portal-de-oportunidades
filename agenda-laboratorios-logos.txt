@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniApp - Aplicativo da Faculdade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .app-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #f8fafc;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .screen {
+            display: none;
+            padding-bottom: 80px;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 375px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 8px 0;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #64748b;
+        }
+        
+        .nav-item.active {
+            color: #667eea;
+        }
+        
+        .nav-item:hover {
+            color: #667eea;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #374151;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        @media (max-width: 375px) {
+            .app-container {
+                max-width: 100%;
+            }
+            
+            .bottom-nav {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background: #f8fafc;">
+    <div class="app-container">
+        <!-- Login Screen -->
+        <div id="login" class="screen active">
+            <div class="gradient-bg" style="height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;">
+                <div class="card" style="width: 100%; max-width: 320px; padding: 24px;">
+                    <div style="text-align: center; margin-bottom: 32px;">
+                        <div style="width: 64px; height: 64px; background: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                            <span style="color: white; font-size: 24px; font-weight: bold;">📚</span>
+                        </div>
+                        <h1 style="font-size: 24px; font-weight: bold; color: #1f2937; margin: 0 0 8px;">UniApp</h1>
+                        <p style="color: #6b7280; margin: 0;">Seu campus na palma da mão</p>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <input type="email" placeholder="E-mail institucional" class="input-field">
+                        <input type="password" placeholder="Senha" class="input-field">
+                        
+                        <button onclick="showScreen('dashboard')" class="btn-primary">
+                            Entrar
+                        </button>
+                        
+                        <div style="text-align: center;">
+                            <span style="color: #6b7280; font-size: 14px;">ou</span>
+                        </div>
+                        
+                        <button onclick="showScreen('dashboard')" class="btn-secondary">
+                            <span>🔍</span>
+                            <span>Entrar com Google</span>
+                        </button>
+                    </div>
+                    
+                    <div style="text-center; margin-top: 24px;">
+                        <a href="#" style="color: #667eea; font-size: 14px; text-decoration: none;">Esqueci minha senha</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard" class="screen">
+            <!-- Header -->
+            <div class="gradient-bg" style="padding: 24px; color: white;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <div>
+                        <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px;">Olá, Maria! 👋</h2>
+                        <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 14px;">Engenharia de Software - 6º período</p>
+                    </div>
+                    <div style="position: relative;">
+                        <button style="padding: 8px; background: rgba(255,255,255,0.2); border-radius: 50%; border: none; cursor: pointer;">
+                            <span style="font-size: 18px;">🔔</span>
+                        </button>
+                        <div class="notification-badge">3</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div style="padding: 0 24px; margin-top: -32px; margin-bottom: 24px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="card" style="padding: 16px;">
+                        <div style="font-size: 24px; font-weight: bold; color: #667eea;">8.5</div>
+                        <div style="font-size: 14px; color: #6b7280;">Média Geral</div>
+                    </div>
+                    <div class="card" style="padding: 16px;">
+                        <div style="font-size: 24px; font-weight: bold; color: #10b981;">92%</div>
+                        <div style="font-size: 14px; color: #6b7280;">Frequência</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Schedule -->
+            <div style="padding: 0 24px; margin-bottom: 24px;">
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Hoje - 15 de Novembro</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="card" style="padding: 16px; border-left: 4px solid #667eea;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h4 style="font-weight: 500; margin: 0 0 4px;">Algoritmos Avançados</h4>
+                                <p style="font-size: 14px; color: #6b7280; margin: 0 0 4px;">Prof. João Silva</p>
+                                <p style="font-size: 14px; color: #667eea; margin: 0;">Sala 201 - Lab. Informática</p>
+                            </div>
+                            <span style="font-size: 12px; background: #dbeafe; color: #1e40af; padding: 4px 8px; border-radius: 4px;">14:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="padding: 16px; border-left: 4px solid #f59e0b;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h4 style="font-weight: 500; margin: 0 0 4px;">Entrega: Projeto Mobile</h4>
+                                <p style="font-size: 14px; color: #6b7280; margin: 0 0 4px;">Desenvolvimento Mobile</p>
+                                <p style="font-size: 14px; color: #f59e0b; margin: 0;">⏰ Prazo até 23:59</p>
+                            </div>
+                            <span style="font-size: 12px; background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px;">Hoje</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div style="padding: 0 24px; margin-bottom: 24px;">
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Acesso Rápido</h3>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+                    <button onclick="showScreen('subjects')" style="display: flex; flex-direction: column; align-items: center; padding: 16px; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                        <span style="font-size: 24px; margin-bottom: 8px;">📖</span>
+                        <span style="font-size: 12px; text-align: center;">Disciplinas</span>
+                    </button>
+                    <button onclick="showScreen('calendar')" style="display: flex; flex-direction: column; align-items: center; padding: 16px; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                        <span style="font-size: 24px; margin-bottom: 8px;">📅</span>
+                        <span style="font-size: 12px; text-align: center;">Calendário</span>
+                    </button>
+                    <button onclick="showScreen('grades')" style="display: flex; flex-direction: column; align-items: center; padding: 16px; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                        <span style="font-size: 24px; margin-bottom: 8px;">📊</span>
+                        <span style="font-size: 12px; text-align: center;">Notas</span>
+                    </button>
+                    <button onclick="showScreen('library')" style="display: flex; flex-direction: column; align-items: center; padding: 16px; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                        <span style="font-size: 24px; margin-bottom: 8px;">📚</span>
+                        <span style="font-size: 12px; text-align: center;">Biblioteca</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subjects Screen -->
+        <div id="subjects" class="screen">
+            <div style="background: white; padding: 24px; border-bottom: 1px solid #e5e7eb;">
+                <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px;">Minhas Disciplinas</h2>
+                <p style="color: #6b7280; margin: 0;">6º Período - 2024.2</p>
+            </div>
+            
+            <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+                <div class="card" style="padding: 16px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <h3 style="font-weight: 600; margin: 0;">Algoritmos Avançados</h3>
+                        <span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Em dia</span>
+                    </div>
+                    <p style="font-size: 14px; color: #6b7280; margin: 0 0 8px;">Prof. João Silva</p>
+                    <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                        <span>Nota: <strong>8.7</strong></span>
+                        <span>Frequência: <strong>95%</strong></span>
+                    </div>
+                    <div style="margin-top: 12px; display: flex; gap: 8px;">
+                        <button style="background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer;">📄 Materiais</button>
+                        <button style="background: #ede9fe; color: #7c3aed; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer;">💬 Fórum</button>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 16px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <h3 style="font-weight: 600; margin: 0;">Desenvolvimento Mobile</h3>
+                        <span style="background: #fed7aa; color: #9a3412; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Pendência</span>
+                    </div>
+                    <p style="font-size: 14px; color: #6b7280; margin: 0 0 8px;">Prof. Ana Costa</p>
+                    <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                        <span>Nota: <strong>7.8</strong></span>
+                        <span>Frequência: <strong>88%</strong></span>
+                    </div>
+                    <div style="margin-top: 12px; display: flex; gap: 8px;">
+                        <button style="background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer;">📄 Materiais</button>
+                        <button style="background: #ede9fe; color: #7c3aed; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer;">💬 Fórum</button>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 16px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <h3 style="font-weight: 600; margin: 0;">Engenharia de Software</h3>
+                        <span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Em dia</span>
+                    </div>
+                    <p style="font-size: 14px; color: #6b7280; margin: 0 0 8px;">Prof. Carlos Mendes</p>
+                    <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                        <span>Nota: <strong>9.2</strong></span>
+                        <span>Frequência: <strong>100%</strong></span>
+                    </div>
+                    <div style="margin-top: 12px; display: flex; gap: 8px;">
+                        <button style="background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer;">📄 Materiais</button>
+                        <button style="background: #ede9fe; color: #7c3aed; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer;">💬 Fórum</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Screen -->
+        <div id="calendar" class="screen">
+            <div style="background: white; padding: 24px; border-bottom: 1px solid #e5e7eb;">
+                <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px;">Calendário Acadêmico</h2>
+                <p style="color: #6b7280; margin: 0;">Novembro 2024</p>
+            </div>
+            
+            <div style="padding: 24px;">
+                <!-- Calendar Grid -->
+                <div class="card" style="padding: 16px; margin-bottom: 24px;">
+                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; font-size: 14px;">
+                        <div style="font-weight: 600; color: #6b7280; padding: 8px;">Dom</div>
+                        <div style="font-weight: 600; color: #6b7280; padding: 8px;">Seg</div>
+                        <div style="font-weight: 600; color: #6b7280; padding: 8px;">Ter</div>
+                        <div style="font-weight: 600; color: #6b7280; padding: 8px;">Qua</div>
+                        <div style="font-weight: 600; color: #6b7280; padding: 8px;">Qui</div>
+                        <div style="font-weight: 600; color: #6b7280; padding: 8px;">Sex</div>
+                        <div style="font-weight: 600; color: #6b7280; padding: 8px;">Sáb</div>
+                        
+                        <!-- Calendar days -->
+                        <div style="padding: 8px; color: #9ca3af;">27</div>
+                        <div style="padding: 8px; color: #9ca3af;">28</div>
+                        <div style="padding: 8px; color: #9ca3af;">29</div>
+                        <div style="padding: 8px; color: #9ca3af;">30</div>
+                        <div style="padding: 8px; color: #9ca3af;">31</div>
+                        <div style="padding: 8px;">1</div>
+                        <div style="padding: 8px;">2</div>
+                        
+                        <div style="padding: 8px;">3</div>
+                        <div style="padding: 8px;">4</div>
+                        <div style="padding: 8px; background: #dbeafe; color: #1e40af; border-radius: 4px;">5</div>
+                        <div style="padding: 8px;">6</div>
+                        <div style="padding: 8px;">7</div>
+                        <div style="padding: 8px;">8</div>
+                        <div style="padding: 8px;">9</div>
+                        
+                        <div style="padding: 8px;">10</div>
+                        <div style="padding: 8px;">11</div>
+                        <div style="padding: 8px; background: #fecaca; color: #991b1b; border-radius: 4px;">12</div>
+                        <div style="padding: 8px;">13</div>
+                        <div style="padding: 8px;">14</div>
+                        <div style="padding: 8px; background: #667eea; color: white; border-radius: 4px; font-weight: 600;">15</div>
+                        <div style="padding: 8px;">16</div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Próximos Eventos</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="card" style="padding: 16px; border-left: 4px solid #ef4444;">
+                        <h4 style="font-weight: 500; color: #991b1b; margin: 0 0 4px;">Prova - Algoritmos Avançados</h4>
+                        <p style="font-size: 14px; color: #6b7280; margin: 0 0 4px;">18 de Novembro, 14:00</p>
+                        <p style="font-size: 14px; color: #ef4444; margin: 0;">📍 Sala 201</p>
+                    </div>
+                    
+                    <div class="card" style="padding: 16px; border-left: 4px solid #667eea;">
+                        <h4 style="font-weight: 500; color: #1e40af; margin: 0 0 4px;">Seminário - Eng. Software</h4>
+                        <p style="font-size: 14px; color: #6b7280; margin: 0 0 4px;">22 de Novembro, 16:00</p>
+                        <p style="font-size: 14px; color: #667eea; margin: 0;">📍 Auditório Principal</p>
+                    </div>
+                    
+                    <div class="card" style="padding: 16px; border-left: 4px solid #10b981;">
+                        <h4 style="font-weight: 500; color: #065f46; margin: 0 0 4px;">Workshop - React Native</h4>
+                        <p style="font-size: 14px; color: #6b7280; margin: 0 0 4px;">25 de Novembro, 19:00</p>
+                        <p style="font-size: 14px; color: #10b981; margin: 0;">📍 Lab. Informática 3</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grades Screen -->
+        <div id="grades" class="screen">
+            <div style="background: white; padding: 24px; border-bottom: 1px solid #e5e7eb;">
+                <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px;">Notas e Frequência</h2>
+                <p style="color: #6b7280; margin: 0;">Histórico Acadêmico</p>
+            </div>
+            
+            <div style="padding: 24px;">
+                <!-- Overall Stats -->
+                <div class="card" style="padding: 16px; margin-bottom: 24px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; font-weight: bold; color: #667eea; margin-bottom: 8px;">8.5</div>
+                        <div style="color: #6b7280;">Coeficiente de Rendimento</div>
+                        <div style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 14px;">
+                            <div>
+                                <div style="font-weight: 600;">Frequência Geral</div>
+                                <div style="color: #10b981;">92%</div>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Créditos</div>
+                                <div style="color: #667eea;">156/180</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Grades -->
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Período Atual</h3>
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="card" style="padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <h4 style="font-weight: 500; margin: 0;">Algoritmos Avançados</h4>
+                            <span style="font-size: 18px; font-weight: bold; color: #10b981;">8.7</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; font-size: 14px;">
+                            <div>
+                                <span style="color: #6b7280;">P1:</span> <strong>8.5</strong>
+                            </div>
+                            <div>
+                                <span style="color: #6b7280;">P2:</span> <strong>9.0</strong>
+                            </div>
+                            <div>
+                                <span style="color: #6b7280;">Freq:</span> <strong>95%</strong>
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px; background: #e5e7eb; border-radius: 9999px; height: 8px;">
+                            <div style="background: #10b981; height: 8px; border-radius: 9999px; width: 87%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <h4 style="font-weight: 500; margin: 0;">Desenvolvimento Mobile</h4>
+                            <span style="font-size: 18px; font-weight: bold; color: #f59e0b;">7.8</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; font-size: 14px;">
+                            <div>
+                                <span style="color: #6b7280;">P1:</span> <strong>7.0</strong>
+                            </div>
+                            <div>
+                                <span style="color: #6b7280;">P2:</span> <strong>8.5</strong>
+                            </div>
+                            <div>
+                                <span style="color: #6b7280;">Freq:</span> <strong>88%</strong>
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px; background: #e5e7eb; border-radius: 9999px; height: 8px;">
+                            <div style="background: #f59e0b; height: 8px; border-radius: 9999px; width: 78%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <h4 style="font-weight: 500; margin: 0;">Engenharia de Software</h4>
+                            <span style="font-size: 18px; font-weight: bold; color: #10b981;">9.2</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; font-size: 14px;">
+                            <div>
+                                <span style="color: #6b7280;">P1:</span> <strong>9.0</strong>
+                            </div>
+                            <div>
+                                <span style="color: #6b7280;">P2:</span> <strong>9.5</strong>
+                            </div>
+                            <div>
+                                <span style="color: #6b7280;">Freq:</span> <strong>100%</strong>
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px; background: #e5e7eb; border-radius: 9999px; height: 8px;">
+                            <div style="background: #10b981; height: 8px; border-radius: 9999px; width: 92%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Library Screen -->
+        <div id="library" class="screen">
+            <div style="background: white; padding: 24px; border-bottom: 1px solid #e5e7eb;">
+                <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 16px;">Biblioteca Digital</h2>
+                <div style="position: relative;">
+                    <input type="text" placeholder="Buscar livros, artigos..." class="input-field" style="padding-left: 40px;">
+                    <span style="position: absolute; left: 12px; top: 12px; color: #9ca3af;">🔍</span>
+                </div>
+            </div>
+            
+            <div style="padding: 24px;">
+                <!-- Quick Access -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <button class="card" style="padding: 16px; text-align: center; border: none; cursor: pointer;">
+                        <span style="font-size: 24px; margin-bottom: 8px; display: block;">📖</span>
+                        <span style="font-size: 14px; font-weight: 500;">Meus Empréstimos</span>
+                        <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">2 livros</div>
+                    </button>
+                    <button class="card" style="padding: 16px; text-align: center; border: none; cursor: pointer;">
+                        <span style="font-size: 24px; margin-bottom: 8px; display: block;">💾</span>
+                        <span style="font-size: 14px; font-weight: 500;">E-books</span>
+                        <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Acesso ilimitado</div>
+                    </button>
+                </div>
+
+                <!-- Recent Books -->
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Livros Recentes</h3>
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="card" style="padding: 16px;">
+                        <div style="display: flex; gap: 16px;">
+                            <div style="width: 48px; height: 64px; background: #667eea; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">
+                                📚
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="font-weight: 500; margin: 0 0 4px;">Algoritmos: Teoria e Prática</h4>
+                                <p style="font-size: 14px; color: #6b7280; margin: 0 0 8px;">Thomas H. Cormen</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 12px; background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px;">Disponível</span>
+                                    <button style="color: #667eea; font-size: 14px; font-weight: 500; background: none; border: none; cursor: pointer;">Reservar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding: 16px;">
+                        <div style="display: flex; gap: 16px;">
+                            <div style="width: 48px; height: 64px; background: #7c3aed; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">
+                                📱
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="font-weight: 500; margin: 0 0 4px;">React Native em Ação</h4>
+                                <p style="font-size: 14px; color: #6b7280; margin: 0 0 8px;">Nader Dabit</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 12px; background: #dbeafe; color: #1e40af; padding: 4px 8px; border-radius: 4px;">E-book</span>
+                                    <button style="color: #667eea; font-size: 14px; font-weight: 500; background: none; border: none; cursor: pointer;">Ler Online</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding: 16px;">
+                        <div style="display: flex; gap: 16px;">
+                            <div style="width: 48px; height: 64px; background: #10b981; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">
+                                ⚙️
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="font-weight: 500; margin: 0 0 4px;">Engenharia de Software</h4>
+                                <p style="font-size: 14px; color: #6b7280; margin: 0 0 8px;">Ian Sommerville</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 12px; background: #fed7aa; color: #9a3412; padding: 4px 8px; border-radius: 4px;">Emprestado</span>
+                                    <span style="font-size: 14px; color: #6b7280;">Devolução: 20/11</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Screen -->
+        <div id="profile" class="screen">
+            <div class="gradient-bg" style="padding: 24px; color: white;">
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                        <span style="font-size: 24px;">👩‍🎓</span>
+                    </div>
+                    <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px;">Maria Silva Santos</h2>
+                    <p style="color: rgba(255,255,255,0.8); margin: 0 0 4px;">Matrícula: 2021.1.001.234</p>
+                    <p style="color: rgba(255,255,255,0.8); margin: 0;">Engenharia de Software - 6º período</p>
+                </div>
+            </div>
+            
+            <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+                <div class="card" style="padding: 16px;">
+                    <h3 style="font-weight: 600; margin: 0 0 12px;">Informações Acadêmicas</h3>
+                    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #6b7280;">Ingresso:</span>
+                            <span>2021.1</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #6b7280;">Previsão de Formatura:</span>
+                            <span>2025.1</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #6b7280;">CR Acumulado:</span>
+                            <span style="font-weight: 600; color: #667eea;">8.5</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #6b7280;">Créditos Cursados:</span>
+                            <span>156/180</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 16px;">
+                    <h3 style="font-weight: 600; margin: 0 0 12px;">Configurações</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f9fafb; border-radius: 8px; border: none; cursor: pointer;">
+                            <span style="display: flex; align-items: center; gap: 12px;">
+                                <span>🔔</span>
+                                <span>Notificações</span>
+                            </span>
+                            <span style="color: #9ca3af;">›</span>
+                        </button>
+                        
+                        <button style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f9fafb; border-radius: 8px; border: none; cursor: pointer;">
+                            <span style="display: flex; align-items: center; gap: 12px;">
+                                <span>🌙</span>
+                                <span>Modo Escuro</span>
+                            </span>
+                            <div style="width: 48px; height: 24px; background: #667eea; border-radius: 9999px; position: relative;">
+                                <div style="width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; right: 2px;"></div>
+                            </div>
+                        </button>
+                        
+                        <button style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f9fafb; border-radius: 8px; border: none; cursor: pointer;">
+                            <span style="display: flex; align-items: center; gap: 12px;">
+                                <span>🔒</span>
+                                <span>Privacidade</span>
+                            </span>
+                            <span style="color: #9ca3af;">›</span>
+                        </button>
+                        
+                        <button style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f9fafb; border-radius: 8px; border: none; cursor: pointer;">
+                            <span style="display: flex; align-items: center; gap: 12px;">
+                                <span>❓</span>
+                                <span>Ajuda e Suporte</span>
+                            </span>
+                            <span style="color: #9ca3af;">›</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="showScreen('login')" style="width: 100%; background: #ef4444; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 500; border: none; cursor: pointer;">
+                    Sair da Conta
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div style="display: flex;">
+                <div class="nav-item active" onclick="showScreen('dashboard'); setActiveNav(this)">
+                    <div style="font-size: 18px; margin-bottom: 4px;">🏠</div>
+                    <div style="font-size: 12px;">Início</div>
+                </div>
+                <div class="nav-item" onclick="showScreen('subjects'); setActiveNav(this)">
+                    <div style="font-size: 18px; margin-bottom: 4px;">📖</div>
+                    <div style="font-size: 12px;">Disciplinas</div>
+                </div>
+                <div class="nav-item" onclick="showScreen('calendar'); setActiveNav(this)">
+                    <div style="font-size: 18px; margin-bottom: 4px;">📅</div>
+                    <div style="font-size: 12px;">Calendário</div>
+                </div>
+                <div class="nav-item" onclick="showScreen('library'); setActiveNav(this)">
+                    <div style="font-size: 18px; margin-bottom: 4px;">📚</div>
+                    <div style="font-size: 12px;">Biblioteca</div>
+                </div>
+                <div class="nav-item" onclick="showScreen('profile'); setActiveNav(this)">
+                    <div style="font-size: 18px; margin-bottom: 4px;">👤</div>
+                    <div style="font-size: 12px;">Perfil</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // Hide all screens
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+            
+            // Hide bottom nav on login screen
+            const bottomNav = document.querySelector('.bottom-nav');
+            if (screenId === 'login') {
+                bottomNav.style.display = 'none';
+            } else {
+                bottomNav.style.display = 'block';
+            }
+        }
+
+        function setActiveNav(element) {
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            // Add active class to clicked item
+            element.classList.add('active');
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start with login screen
+            showScreen('login');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97357d5884705219',t:'MTc1NTg5ODQxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Oportunidades - Faculdade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">🎓</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">Portal de Oportunidades</h1>
+                        <p class="text-sm text-gray-600">Faculdade de Tecnologia</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <button onclick="showHome()" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Início</button>
+                    <button onclick="showStudentArea()" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Área do Aluno</button>
+                    <button onclick="showCompanyArea()" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Área da Empresa</button>
+                    <button onclick="showAdminArea()" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Coordenação</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Home Page -->
+        <div id="homePage" class="fade-in">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Conectando Talentos a Oportunidades</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Plataforma oficial da faculdade para estágios e empregos. Conectamos nossos alunos e ex-alunos às melhores empresas parceiras.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                    <div class="text-3xl font-bold text-blue-600 mb-2" id="totalJobs">24</div>
+                    <div class="text-gray-600">Vagas Ativas</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                    <div class="text-3xl font-bold text-green-600 mb-2" id="totalStudents">156</div>
+                    <div class="text-gray-600">Alunos Cadastrados</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                    <div class="text-3xl font-bold text-purple-600 mb-2" id="totalCompanies">18</div>
+                    <div class="text-gray-600">Empresas Parceiras</div>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl">👨‍🎓</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Sou Aluno</h3>
+                        <p class="text-gray-600 mb-6">Encontre oportunidades de estágio e emprego adequadas ao seu perfil acadêmico.</p>
+                        <button onclick="showStudentArea()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">Acessar Área do Aluno</button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl">🏢</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Sou Empresa</h3>
+                        <p class="text-gray-600 mb-6">Publique vagas e encontre os melhores talentos da nossa faculdade.</p>
+                        <button onclick="showCompanyArea()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">Acessar Área da Empresa</button>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-8 shadow-lg">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Vagas Recentes</h3>
+                <div id="recentJobs" class="space-y-4">
+                    <!-- Jobs will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Area -->
+        <div id="studentArea" class="hidden fade-in">
+            <!-- ... (Student Area code, see previous answer for full content) ... -->
+        </div>
+        <!-- Company Area -->
+        <div id="companyArea" class="hidden fade-in">
+            <!-- ... (Company Area code, see previous answer for full content) ... -->
+        </div>
+        <!-- Admin Area -->
+        <div id="adminArea" class="hidden fade-in">
+            <!-- ... (Admin Area code, see previous answer for full content) ... -->
+        </div>
+    </main>
+
+    <script>
+        // JS code is the same as previously provided
+        // ... (see your previous code for the full script section) ...
+    </script>
+</body>
+</html>
